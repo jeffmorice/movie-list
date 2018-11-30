@@ -2,7 +2,7 @@
 #     list - add existing movies to a custom list
 #         - display query results to table - check
 #     search - query the model to return matching items
-#     add - add new Movies to the model
+#     add - add new Movies to the model - check
 #     edit - edit existing entries
 #     delete - delete existing entries
 # movies should be stored in a database - check
@@ -106,6 +106,45 @@ def add_movie():
         return redirect('/movie?id=' + str(new_movie.id))
 
     return render_template('add-movie.html')
+
+@app.route('/edit-movie', methods=['POST', 'GET'])
+def edit_movie():
+    if request.method =='POST':
+        # retrieve form data
+        # release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot
+        movie_id = request.form["movie_id"]
+        release_year = request.form["release_year"]
+        title = request.form["title"]
+        origin_ethnicity = request.form["origin_ethnicity"]
+        director = request.form["director"]
+        cast = request.form["cast"]
+        genre = request.form["genre"]
+        wiki_page = request.form["wiki_page"]
+        plot = request.form["plot"]
+
+        target_movie = Movie.query.filter_by(id=movie_id).first()
+
+        # if performing validation pre-edit, now is the time.
+        # stage
+        target_movie.release_year = release_year
+        target_movie.title = title
+        target_movie.origin_ethnicity = origin_ethnicity
+        target_movie.director = director
+        target_movie.cast = cast
+        target_movie.genre = genre
+        target_movie.wiki_page = wiki_page
+        target_movie.plot = plot
+
+        # commit to database
+        db.session.commit()
+
+        return redirect('/movie?id=' + str(movie_id))
+
+    movie_id = request.args.get('id')
+    movie = Movie.query.filter_by(id=movie_id).first()
+    print(movie.title)
+
+    return render_template('edit-movie.html', movie=movie)
 
 
 # run the app
