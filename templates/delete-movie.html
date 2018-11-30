@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    <h1>Are you sure you want to delete {{movie.title}}?</h1>
+    <br>
+    <br>
+    <form method='POST' action="/delete-movie">
+        <input type="hidden" name="movie_id" value="{{movie.id}}" />
+        <input type="submit" value="Yes, I'm Sure" />
+    </form>
+    {% endblock %}

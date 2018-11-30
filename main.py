@@ -3,8 +3,8 @@
 #         - display query results to table - check
 #     search - query the model to return matching items
 #     add - add new Movies to the model - check
-#     edit - edit existing entries
-#     delete - delete existing entries
+#     edit - edit existing entries - check
+#     delete - delete existing entries - check
 # movies should be stored in a database - check
 # should contain the csv data linked to you - check
 # should have a process for ingesting that csv into the database - check
@@ -42,6 +42,7 @@ class Movie(db.Model):
     genre = db.Column(db.String(120))
     wiki_page = db.Column(db.String(255))
     plot = db.Column(db.Text)
+    is_visible = db.Column(db.Boolean)
 
     def __init__(self, release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot):
         self.release_year = release_year
@@ -52,8 +53,7 @@ class Movie(db.Model):
         self.genre = genre
         self.wiki_page = wiki_page
         self.plot = plot
-
-
+        self.is_visible = True
 
 # define your request handlers, one for each page
     # include any logic, say for validation or updating the database
@@ -142,10 +142,26 @@ def edit_movie():
 
     movie_id = request.args.get('id')
     movie = Movie.query.filter_by(id=movie_id).first()
-    print(movie.title)
+    #print(movie.title)
 
     return render_template('edit-movie.html', movie=movie)
 
+@app.route('/delete-movie', methods=['POST', 'GET'])
+def delete_movie():
+    if request.method == 'POST':
+        # retrieve form database
+        movie_id = request.form["movie_id"]
+        target_movie = Movie.query.filter_by(id=movie_id).first()
+
+        # set is_visible to False
+        target_movie.is_visible = False
+        db.session.commit()
+
+        return render_template('index.html')
+
+    movie_id = request.args.get('id')
+    movie = Movie.query.filter_by(id=movie_id).first()
+    return render_template('delete-movie.html', movie=movie)
 
 # run the app
 if __name__ == "__main__":
