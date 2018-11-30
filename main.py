@@ -36,21 +36,23 @@ class Movie(db.Model):
     release_year = db.Column(db.Integer)
     title = db.Column(db.String(120))
     origin_ethnicity = db.Column(db.String(120))
-    director = db.Column(db.String(120))
-    cast = db.Column(db.String(255))
+    director = db.Column(db.String(255))
+    cast = db.Column(db.Text)
     genre = db.Column(db.String(120))
     wiki_page = db.Column(db.String(255))
-    plot = db.Column (db.String(255))
+    plot = db.Column(db.Text)
 
     def __init__(self, release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot):
         self.release_year = release_year
-        self.title = Title
+        self.title = title
         self. origin_ethnicity = origin_ethnicity
         self.director = director
         self.cast = cast
         self.genre = genre
         self.wiki_page = wiki_page
         self.plot = plot
+
+
 
 # define your request handlers, one for each page
     # include any logic, say for validation or updating the database
