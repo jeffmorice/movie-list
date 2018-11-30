@@ -46,7 +46,7 @@ class Movie(db.Model):
     def __init__(self, release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot):
         self.release_year = release_year
         self.title = title
-        self. origin_ethnicity = origin_ethnicity
+        self.origin_ethnicity = origin_ethnicity
         self.director = director
         self.cast = cast
         self.genre = genre
@@ -76,6 +76,37 @@ def movie():
     movie_id = request.args.get('id')
     movie = Movie.query.filter_by(id=movie_id).first()
     return render_template('individual_movie.html', movie=movie)
+
+@app.route('/search')
+def search():
+    # decide how to pass and handle queries
+    # search by column or search all?
+    return render_template('/index')
+
+@app.route('/add-movie', methods=['POST', 'GET'])
+def add_movie():
+    if request.method =='POST':
+        # retrieve form data
+        # release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot
+        release_year = request.form["release_year"]
+        title = request.form["title"]
+        origin_ethnicity = request.form["origin_ethnicity"]
+        director = request.form["director"]
+        cast = request.form["cast"]
+        genre = request.form["genre"]
+        wiki_page = request.form["wiki_page"]
+        plot = request.form["plot"]
+
+        new_movie = Movie(release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot)
+        # stage
+        db.session.add(new_movie)
+        # commit to database
+        db.session.commit()
+
+        return redirect('/movie?id=' + str(new_movie.id))
+
+    return render_template('add-movie.html')
+
 
 # run the app
 if __name__ == "__main__":

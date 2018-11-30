@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    <h1>Add New Movie</h1>
+    <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
+    <!-- decide whether or not to validate user input -->
+    <!-- if validating input, make user friendly by preserving user input, passing in as 'value={{input}}' -->
+        <form method='POST' action="/add-movie">
+          <label> <h3>Year released</h3>
+            <input name="release_year" type="number" value="" />
+          </label>
+          <br>
+          <label> <h3>Title</h3>
+            <input name="title" type="text" value="" />
+          </label>
+          <br>
+          <label> <h3>Country of origin or ethnic background of creators</h3>
+            <input name="origin_ethnicity" type="text" value="" />
+          </label>
+          <br>
+          <label> <h3>Director(s)</h3>
+            <input name="director" type="text" value="" />
+          </label>
+          <br>
+          <label> <h3>Featured performers</h3>
+            <textarea name="cast" rows="10" cols="50" ></textarea>
+          </label>
+          <br>
+          <label> <h3>Genre(s)</h3>
+            <input name="genre" type="text" value="" />
+          </label>
+          <br>
+          <label> <h3>URL for wiki page</h3>
+            <input name="wiki_page" type="text" value="" />
+          </label>
+          <br>
+          <label> <h3>Plot summary</h3>
+            <textarea name="plot" rows="10" cols="50" ></textarea>
+          </label>
+          <br>
+          <input type="submit" value="Submit New Movie" />
+
+        </form>
+    {% endblock %}
