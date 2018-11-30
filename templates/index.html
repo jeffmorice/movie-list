@@ -1,10 +1,30 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Movie List</title>
-  </head>
-  <body>
-    Here is where my movie list will be displayed.
-  </body>
-</html>
+{% extends 'base.html' %}
+
+  {% block content %}
+    <table>
+      <tr>
+        <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
+        <!-- Longer pieces of data will be displayed on individual movie pages -->
+        <td><strong>Release Year</strong></td>
+        <td><strong>Title</strong></td>
+        <td><strong>Origin</strong></td>
+        <td><strong>Director</strong></td>
+        <td><strong>Genre</strong></td>
+      </tr>
+      {% for record in records %}
+          <tr>
+            <td>{{record.release_year}}</td>
+            <td>{{record.title}}</td>
+            <td>{{record.origin}}</td>
+            <td>{{record.director}}</td>
+            <td>{{record.genre}}</td>
+          </tr>
+      {% endfor %}
+    </table>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Newer movies</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Older movies</a>
+    {% endif %}
+  {% endblock %}
