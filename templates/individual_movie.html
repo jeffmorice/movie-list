@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+        <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
+        <!-- Longer pieces of data will be displayed on individual movie pages -->
+        <h1>{{movie.title}} ({{movie.release_year}})</h1>
+        <h3>Directed by: {{movie.director}}</h3>
+        <h3>Released: {{movie.release_year}}</h3>
+        <h3>Genre: {{movie.genre}}</h3>
+        <h3>Origin: {{movie.origin_ethnicity}}</h3>
+        <p>Cast: {{movie.cast}}</>
+        <p>Plot summary: {{movie.plot}}</p>
+        <h3><a href="{{movie.wiki_page}}">Wiki Page</a></h3>
+
+  {% endblock %}

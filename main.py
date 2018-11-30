@@ -1,5 +1,6 @@
 # build a web app for movies that allows users to
 #     list - add existing movies to a custom list
+#         - display query results to table - check
 #     search - query the model to return matching items
 #     add - add new Movies to the model
 #     edit - edit existing entries
@@ -67,8 +68,14 @@ def index():
     prev_url = url_for('index', page=records.prev_num) \
         if records.has_prev else None
 
-
     return render_template('index.html', records=records.items, next_url=next_url, prev_url=prev_url)
+
+@app.route('/movie')
+def movie():
+    # for displaying individual Movies
+    movie_id = request.args.get('id')
+    movie = Movie.query.filter_by(id=movie_id).first()
+    return render_template('individual_movie.html', movie=movie)
 
 # run the app
 if __name__ == "__main__":

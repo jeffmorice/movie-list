@@ -14,7 +14,7 @@
       {% for record in records %}
           <tr>
             <td>{{record.release_year}}</td>
-            <td>{{record.title}}</td>
+            <td><a href='/movie?id={{record.id}}'>{{record.title}}</a></td>
             <td>{{record.origin}}</td>
             <td>{{record.director}}</td>
             <td>{{record.genre}}</td>
