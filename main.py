@@ -1,7 +1,7 @@
 # build a web app for movies that allows users to
 #     list - add existing movies to a custom list
 #         - display query results to table - check
-#     search - query the model to return matching items
+#     search - query the model to return matching items - check
 #     add - add new Movies to the model - check
 #     edit - edit existing entries - check
 #     delete - delete existing entries - check
@@ -12,7 +12,7 @@
 # Bonus: create a javascript frontend using a framework such as React, Vue or Angular for a more "modern" editing experience.
 
 # import relevant modules
-from flask import Flask, request, redirect, render_template, url_for
+from flask import Flask, request, redirect, render_template, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
 
@@ -62,7 +62,7 @@ class Movie(db.Model):
 def index():
     # pass db info. Should support pagination as there are 34,000 entries
     page = request.args.get('page', 1, type=int)
-    records = Movie.query.order_by(desc(Movie.release_year)).paginate(page, 20, False)
+    records = Movie.query.filter_by(is_visible=1).order_by(desc(Movie.release_year)).paginate(page, 20, False)
     next_url = url_for('index', page=records.next_num) \
         if records.has_next else None
     prev_url = url_for('index', page=records.prev_num) \
@@ -77,11 +77,50 @@ def movie():
     movie = Movie.query.filter_by(id=movie_id).first()
     return render_template('individual_movie.html', movie=movie)
 
-@app.route('/search')
+@app.route('/search', methods=['POST', 'GET'])
 def search():
-    # decide how to pass and handle queries
-    # search by column or search all?
-    return render_template('/index')
+    if request.method == 'POST':
+        # decide how to pass and handle queries
+        # search by column or search all?
+        # start with column
+        search_term = request.form['search_term']
+        column = request.form['column']
+
+        page = request.args.get('page', 1, type=int)
+
+        # Could not get pagination to work with search results. Commented out pagination attibutes.
+
+        if column == 'release_year':
+            search_results = Movie.query.filter(Movie.release_year.contains(int(search_term))).all() #.paginate(page, 20, False)
+        elif column == 'title':
+            search_results = Movie.query.filter(Movie.title.contains(search_term)).all() #.paginate(page, 20, False)
+        elif column == 'origin_ethnicity':
+            search_results = Movie.query.filter(Movie.origin_ethnicity.contains(search_term)).all() #.paginate(page, 20, False)
+        elif column == 'director':
+            search_results = Movie.query.filter(Movie.director.contains(search_term)).all() #.paginate(page, 20, False)
+        elif column == 'cast':
+            search_results = Movie.query.filter(Movie.cast.contains(search_term)).all() #.paginate(page, 20, False)
+        elif column == 'genre':
+            search_results = Movie.query.filter(Movie.genre.contains(search_term)).all() #.paginate(page, 20, False)
+
+        # next_url = url_for('search', page=search_results.next_num) \
+        #     if search_results.has_next else None
+        # prev_url = url_for('search', page=search_results.prev_num) \
+        #     if search_results.has_prev else None
+
+        # currently returns un-paginated results
+        return render_template('search.html', search_results=search_results) #.items, next_url=next_url, prev_url=prev_url)
+
+    # use session data to enable search results to persist through pagination
+    # if request.method != 'POST' and 'search_term' in session:
+    #     next_url = url_for('search', page=search_results.next_num) \
+    #         if search_results.has_next else None
+    #     prev_url = url_for('search', page=search_results.prev_num) \
+    #         if search_results.has_prev else None
+
+        return render_template('search.html', search_results=search_results.items, next_url=next_url, prev_url=prev_url)
+
+    return render_template('search.html')
 
 @app.route('/add-movie', methods=['POST', 'GET'])
 def add_movie():
@@ -154,10 +193,10 @@ def delete_movie():
         target_movie = Movie.query.filter_by(id=movie_id).first()
 
         # set is_visible to False
-        target_movie.is_visible = False
+        target_movie.is_visible = 0
         db.session.commit()
 
-        return render_template('index.html')
+        return redirect('/')
 
     movie_id = request.args.get('id')
     movie = Movie.query.filter_by(id=movie_id).first()

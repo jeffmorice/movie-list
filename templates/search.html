@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+    <form method='POST' action="/search">
+      <input type='text' name='search_term'>
+      <label>search by:
+        <select name='column'>
+          <option value="release_year">Release Year</option>
+          <option value="title">Title</option>
+          <option value="origin_ethnicity">Origin</option>
+          <option value="director">Director</option>
+          <option value="cast">Cast</option>
+          <option value="genre">Genre</option>
+        </select>
+      </label>
+      <br>
+      <br>
+      <input type="submit" value="Search" />
+    <form>
+
+    <table>
+      <tr>
+        <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
+        <!-- Longer pieces of data will be displayed on individual movie pages -->
+        <td><strong>Release Year</strong></td>
+        <td><strong>Title</strong></td>
+        <td><strong>Origin</strong></td>
+        <td><strong>Director</strong></td>
+        <td><strong>Genre</strong></td>
+      </tr>
+      {% for search_result in search_results %}
+          <tr>
+            <td>{{search_result.release_year}}</td>
+            <td><a href='/movie?id={{search_result.id}}'>{{search_result.title}}</a></td>
+            <td>{{search_result.origin}}</td>
+            <td>{{search_result.director}}</td>
+            <td>{{search_result.genre}}</td>
+          </tr>
+      {% endfor %}
+    </table>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Previous</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Next</a>
+    {% endif %}
+  {% endblock %}
