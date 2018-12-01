@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+  {% block content %}
+    <h1>My Watch List</h1>
+
+    {% if movies == None %}
+      <h3>Add movies to your Watch List and they will appear here. </h3>
+    {% endif %}
+    <table>
+      <tr>
+        <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
+        <!-- Longer pieces of data will be displayed on individual movie pages -->
+        <td><strong>Release Year</strong></td>
+        <td><strong>Title</strong></td>
+        <td><strong>Origin</strong></td>
+        <td><strong>Director</strong></td>
+        <td><strong>Genre</strong></td>
+      </tr>
+      {% for movie in movies %}
+          <tr>
+            <td>{{movie.release_year}}</td>
+            <td><a href='/movie?id={{movie.movie_id}}'>{{movie.title}}</a></td>
+            <td>{{movie.origin}}</td>
+            <td>{{movie.director}}</td>
+            <td>{{movie.genre}}</td>
+          </tr>
+      {% endfor %}
+    </table>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Newer movies</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Older movies</a>
+    {% endif %}
+  {% endblock %}
