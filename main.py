@@ -15,6 +15,7 @@
 from flask import Flask, request, redirect, render_template, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import desc
+import datetime
 
 # define your app
 app = Flask(__name__)
@@ -53,6 +54,18 @@ class Movie(db.Model):
         self.genre = genre
         self.wiki_page = wiki_page
         self.plot = plot
+        self.is_visible = True
+
+class UserMovie(db.Model):
+    # create a model for storing user-created list of movies
+    id = db.Column(db.Integer, primary_key=True)
+    movie_id = db.Column(db.Integer, unique=True)
+    date_added = db.Column(db.DateTime)
+    is_visible = db.Column(db.Boolean)
+
+    def __init__(self, movie_id, date_added):
+        self.movie_id = movie_id
+        self.date_added = date_added
         self.is_visible = True
 
 # define your request handlers, one for each page
@@ -201,6 +214,28 @@ def delete_movie():
     movie_id = request.args.get('id')
     movie = Movie.query.filter_by(id=movie_id).first()
     return render_template('delete-movie.html', movie=movie)
+
+@app.route('/add-to-list')
+def add_to_list():
+    movie_id = request.args.get('id')
+    current_date = datetime.datetime.today()
+
+    new_user_movie = UserMovie(movie_id, current_date)
+
+    db.session.add(new_user_movie)
+    db.session.commit()
+
+    return redirect('/user-movies')
+
+@app.route('/user-movies')
+def user_movies():
+    user_movies = UserMovie.query.all()
+    movies = []
+
+    for movie in user_movies:
+        movies.append(Movie.query.filter_by(id=movie.movie_id).first())
+
+    return render_template('user-movies.html', movies=movies)
 
 # run the app
 if __name__ == "__main__":

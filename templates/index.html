@@ -10,6 +10,7 @@
         <td><strong>Origin</strong></td>
         <td><strong>Director</strong></td>
         <td><strong>Genre</strong></td>
+        <td><strong>Add to Watch List</strong></td>
       </tr>
       {% for record in records %}
           <tr>
@@ -18,6 +19,7 @@
             <td>{{record.origin}}</td>
             <td>{{record.director}}</td>
             <td>{{record.genre}}</td>
+            <td><a href="/add-to-list?id={{record.id}}">Add</a>
           </tr>
       {% endfor %}
     </table>

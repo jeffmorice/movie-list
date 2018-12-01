@@ -27,6 +27,7 @@
         <td><strong>Origin</strong></td>
         <td><strong>Director</strong></td>
         <td><strong>Genre</strong></td>
+        <td><strong>Add to Watch List</strong></td>
       </tr>
       {% for search_result in search_results %}
           <tr>
@@ -35,6 +36,7 @@
             <td>{{search_result.origin}}</td>
             <td>{{search_result.director}}</td>
             <td>{{search_result.genre}}</td>
+            <td><a href="/add-to-list?id={{search_result.id}}">Add</a>
           </tr>
       {% endfor %}
     </table>
