@@ -220,20 +220,37 @@ def add_to_list():
     movie_id = request.args.get('id')
     current_date = datetime.datetime.today()
 
-    new_user_movie = UserMovie(movie_id, current_date)
+    existing_user_movie = UserMovie.query.filter_by(movie_id=movie_id).first()
+    # if user previously added movie to list and removed it, it would be invisible
+    if existing_user_movie:
+        existing_user_movie.is_visible = 1
+        db.session.commit()
+    else:
+        new_user_movie = UserMovie(movie_id, current_date)
 
-    db.session.add(new_user_movie)
+        db.session.add(new_user_movie)
+        db.session.commit()
+
+    return redirect('/user-movies')
+
+@app.route('/remove-from-list')
+def remove_from_list():
+    movie_id = request.args.get('id')
+
+    discarded_user_movie = UserMovie.query.filter_by(movie_id=movie_id).first()
+    discarded_user_movie.is_visible = 0
+
     db.session.commit()
 
     return redirect('/user-movies')
 
 @app.route('/user-movies')
 def user_movies():
-    user_movies = UserMovie.query.all()
+    user_movies = UserMovie.query.filter_by(is_visible=1).all()
     movies = []
 
     for movie in user_movies:
-        movies.append(Movie.query.filter_by(id=movie.movie_id).first())
+        movies.append(Movie.query.filter_by(id=movie.movie_id).filter_by(is_visible=1).first())
 
     return render_template('user-movies.html', movies=movies)
 

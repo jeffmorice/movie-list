@@ -3,9 +3,9 @@
   {% block content %}
     <h1>My Watch List</h1>
 
-    {% if movies == None %}
-      <h3>Add movies to your Watch List and they will appear here. </h3>
-    {% endif %}
+    {% if movies == [] %}
+      <h3>Add movies to your Watch List and they will appear here.</h3>
+    {% else %}
     <table>
       <tr>
         <!-- release_year, title, origin_ethnicity, director, cast, genre, wiki_page, plot -->
@@ -15,17 +15,20 @@
         <td><strong>Origin</strong></td>
         <td><strong>Director</strong></td>
         <td><strong>Genre</strong></td>
+        <td><strong>Remove from List</strong></td>
       </tr>
       {% for movie in movies %}
           <tr>
             <td>{{movie.release_year}}</td>
-            <td><a href='/movie?id={{movie.movie_id}}'>{{movie.title}}</a></td>
+            <td><a href='/movie?id={{movie.id}}'>{{movie.title}}</a></td>
             <td>{{movie.origin}}</td>
             <td>{{movie.director}}</td>
             <td>{{movie.genre}}</td>
+            <td><a href='/remove-from-list?id={{movie.id}}'>Remove</a></td>
           </tr>
       {% endfor %}
     </table>
+    {% endif %}
     {% if prev_url %}
         <a href="{{ prev_url }}">Newer movies</a>
     {% endif %}
