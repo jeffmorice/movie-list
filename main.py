@@ -124,31 +124,24 @@ def search():
         #     if search_results.has_prev else None
 
         if search_term_two:
-            # function that filters Movie search_results by second term and column
+            # function that filters a list of Movies (search results) by an additional term and column
             def filter_search_results(results, term_two):
                 filtered_results = []
 
                 for result in results:
                     if column_two == 'release_year':
                         term_two = int(term_two)
-                        column_value = result.release_year
-                    elif column_two == 'title':
-                        column_value = result.title
-                    elif column_two == 'origin_ethnicity':
-                        column_value = result.origin_ethnicity
-                    elif column_two == 'director':
-                        column_value = result.director
-                    elif column_two == 'cast':
-                        column_value = result.cast
-                    elif column_two == 'genre':
-                        column_value = result.genre
-
-                    # print("############   " + str(type(term_two)) + "   ############")
-                    # print("############   " + str(column_value) + "   ############")
-
-                    if str(type(term_two)) == "<class 'int'>" and term_two == column_value:
+                        if term_two == result.release_year:
+                            filtered_results.append(result)
+                    elif column_two == 'title' and term_two in result.title:
                         filtered_results.append(result)
-                    elif str(type(term_two)) == "<class 'str'>" and term_two in column_value:
+                    elif column_two == 'origin_ethnicity' and term_two in result.origin_ethnicity:
+                        filtered_results.append(result)
+                    elif column_two == 'director' and term_two in result.director:
+                        filtered_results.append(result)
+                    elif column_two == 'cast' and term_two in result.cast:
+                        filtered_results.append(result)
+                    elif column_two == 'genre' and term_two in result.genre:
                         filtered_results.append(result)
 
                 return filtered_results
