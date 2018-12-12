@@ -98,6 +98,8 @@ def search():
         # start with column
         search_term = request.form['search_term']
         column = request.form['column']
+        search_term_two = request.form['search_term_two']
+        column_two = request.form['column_two']
 
         page = request.args.get('page', 1, type=int)
 
@@ -121,8 +123,43 @@ def search():
         # prev_url = url_for('search', page=search_results.prev_num) \
         #     if search_results.has_prev else None
 
-        # currently returns un-paginated results
-        return render_template('search.html', search_results=search_results) #.items, next_url=next_url, prev_url=prev_url)
+        if search_term_two:
+            # function that filters Movie search_results by second term and column
+            def filter_search_results(results, term_two):
+                filtered_results = []
+
+                for result in results:
+                    if column_two == 'release_year':
+                        term_two = int(term_two)
+                        column_value = result.release_year
+                    elif column_two == 'title':
+                        column_value = result.title
+                    elif column_two == 'origin_ethnicity':
+                        column_value = result.origin_ethnicity
+                    elif column_two == 'director':
+                        column_value = result.director
+                    elif column_two == 'cast':
+                        column_value = result.cast
+                    elif column_two == 'genre':
+                        column_value = result.genre
+
+                    # print("############   " + str(type(term_two)) + "   ############")
+                    # print("############   " + str(column_value) + "   ############")
+
+                    if str(type(term_two)) == "<class 'int'>" and term_two == column_value:
+                        filtered_results.append(result)
+                    elif str(type(term_two)) == "<class 'str'>" and term_two in column_value:
+                        filtered_results.append(result)
+
+                return filtered_results
+
+            filtered_results = filter_search_results(search_results, search_term_two)
+
+            # currently returns un-paginated results
+            return render_template('search.html', search_results=filtered_results) #.items, next_url=next_url, prev_url=prev_url)
+        else:
+            # currently returns un-paginated results
+            return render_template('search.html', search_results=search_results)
 
     # use session data to enable search results to persist through pagination
     # if request.method != 'POST' and 'search_term' in session:
@@ -131,7 +168,7 @@ def search():
     #     prev_url = url_for('search', page=search_results.prev_num) \
     #         if search_results.has_prev else None
 
-        return render_template('search.html', search_results=search_results.items, next_url=next_url, prev_url=prev_url)
+    # return render_template('search.html', search_results=search_results.items, next_url=next_url, prev_url=prev_url)
 
     return render_template('search.html')
 

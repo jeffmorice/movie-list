@@ -14,6 +14,18 @@
         </select>
       </label>
       <br>
+      <input type='text' name='search_term_two'>
+      <label>search by:
+        <select name='column_two'>
+          <option value="release_year">Release Year</option>
+          <option value="title">Title</option>
+          <option value="origin_ethnicity">Origin</option>
+          <option value="director">Director</option>
+          <option value="cast">Cast</option>
+          <option value="genre">Genre</option>
+        </select>
+      </label>
+      <br>
       <br>
       <input type="submit" value="Search" />
     <form>
@@ -33,7 +45,7 @@
           <tr>
             <td>{{search_result.release_year}}</td>
             <td><a href='/movie?id={{search_result.id}}'>{{search_result.title}}</a></td>
-            <td>{{search_result.origin}}</td>
+            <td>{{search_result.origin_ethnicity}}</td>
             <td>{{search_result.director}}</td>
             <td>{{search_result.genre}}</td>
             <td><a href="/add-to-list?id={{search_result.id}}">Add</a>
